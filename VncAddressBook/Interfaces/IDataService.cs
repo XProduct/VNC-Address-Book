@@ -9,7 +9,7 @@ namespace VncAddressBook.Model
     public interface IDataService
     {
         List<Entry> LoadEntries();
-        void AddEntry(Entry entry);
+        void SaveEntry(Entry entry);
         void OpenVncViewer(Entry entry);
     }
 }

@@ -7,7 +7,7 @@ namespace VncAddressBook.Design
 {
     public class DesignDataService : IDataService
     {
-        public void AddEntry(Entry entry)
+        public void SaveEntry(Entry entry)
         {
             
         }
@@ -18,13 +18,13 @@ namespace VncAddressBook.Design
                 {
                     new Entry()
                     {
-                        Name = "WS0001 - Front Office",
-                        IpAddress = "192.168.1.1"
+                        Name = "WS0001 - Ethan Office",
+                        Host = "192.168.1.1"
                     },
                     new Entry()
                     {
                         Name = "WS0001 - Warehouse",
-                        IpAddress = "192.168.1.3"
+                        Host = "192.168.1.3"
                     }
                 };
         }

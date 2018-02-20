@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:conv="clr-namespace:VncAddressBook.Converters"
         mc:Ignorable="d ignore"
         SizeToContent="WidthAndHeight"
         Title="VNC Address Book"
-        DataContext="{Binding Main, Source={StaticResource Locator}}">
+        DataContext="{Binding Main, Source={StaticResource Locator}}" d:DesignWidth="282" d:DesignHeight="448">
 
     <Window.Resources>
+        <conv:BoolToCollapsedConverter x:Key="BoolToCollapsedConverter" />
     </Window.Resources>
 
     <Grid x:Name="LayoutRoot">
@@ -30,10 +32,10 @@
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <Button Content="Add" Command="{Binding AddEntryCommand}" />
-            <Button Content="Edit" Margin="6,0,0,0" />
+            <Button Content="Edit" Margin="6,0,0,0" Command="{Binding EditEntryCommand}" />
             <Button Content="Remove" Margin="6,0,0,0" />
         </StackPanel>
-        
+
         <ListBox Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Entries}" SelectedItem="{Binding SelectedEntry}" BorderBrush="{x:Null}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -56,5 +58,66 @@
         </ListBox>
 
         <Button Content="Connect" Command="{Binding ConnectCommand}" Grid.Column="1" Grid.Row="5" />
+
+        <Grid Grid.ColumnSpan="999" Grid.RowSpan="999" Background="#AA333333"  Visibility="{Binding IsEditEntryVisible, Converter={StaticResource BoolToCollapsedConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Column="1" Grid.Row="1" Background="White">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="12" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="13*" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="9*" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="9*" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="9*" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="9*"/>
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="12" />
+                </Grid.RowDefinitions>
+
+                <TextBox Text="{Binding EditingEntry.Name}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" FontSize="18" FontWeight="SemiBold" />
+
+                <TextBlock Text="IP Address" FontWeight="SemiBold" Grid.Column="1" Grid.Row="3" />
+                <TextBox Text="{Binding EditingEntry.IpAddress}" Grid.Column="3" Grid.Row="3" />
+
+                <TextBlock Text="Username" FontWeight="SemiBold" Grid.Column="1" Grid.Row="5" />
+                <TextBox Text="{Binding EditingEntry.Username}" Grid.Column="3" Grid.Row="5" />
+
+                <TextBlock Text="Password" FontWeight="SemiBold" Grid.Column="1" Grid.Row="7" />
+                <TextBox Text="{Binding EditingEntry.Password}" Grid.Column="3" Grid.Row="7" />
+
+                <TextBlock Text="Scaling" FontWeight="SemiBold" Grid.Column="1" Grid.Row="9" />
+                <TextBox Text="{Binding EditingEntry.Scaling}" Grid.Column="3" Grid.Row="9" />
+
+                <TextBlock Text="Comments" FontWeight="SemiBold" Grid.Column="1" Grid.Row="11" />
+                <TextBox Text="{Binding EditingEntry.Comment}" Grid.Column="1" Grid.Row="12" Grid.ColumnSpan="3" />
+
+                <Button Content="Save" Grid.Column="1" Grid.Row="14" Grid.ColumnSpan="3" Command="{Binding SaveEntryCommand}" />
+
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

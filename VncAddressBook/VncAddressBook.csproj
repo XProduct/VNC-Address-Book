@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolToCollapsedConverter.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Services\DataService.cs" />
