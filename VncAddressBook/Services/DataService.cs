@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Text;
 using VncAddressBook.Models;
 
@@ -9,6 +10,27 @@ namespace VncAddressBook.Model
     public class DataService : IDataService
     {
         readonly string vncEntriesPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\XProduct\VNC Address Book\";
+
+        public string GetTightVncPath()
+        {
+            string progFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\TightVNC\";
+            string progFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + @"\TightVNC\";
+            string tightVncPath;
+            if (Directory.Exists(progFiles) && File.Exists(progFiles + @"tvnviewer.exe"))
+            {
+                tightVncPath = progFiles + @"tvnviewer.exe";
+            }
+            else if (Directory.Exists(progFilesX86) && File.Exists(progFilesX86 + @"tvnviewer.exe"))
+            {
+                tightVncPath = progFilesX86 + @"tvnviewer.exe";
+            }
+            else
+            {
+                tightVncPath = "invalidpath";
+            }
+
+            return tightVncPath;
+        }
 
         public void SaveEntry(Entry entry)
         {
@@ -176,11 +198,11 @@ namespace VncAddressBook.Model
             }
             catch (FileNotFoundException f)
             {
-                Console.WriteLine("Exception: A file was not found in LoadEntries().", f.ToString());
+                Console.WriteLine("Exception: A file was not found - LoadEntries().", f.ToString());
             }
             catch (DirectoryNotFoundException d)
             {
-                Console.WriteLine("Exception: Directory not found in LoadEntries().", d.ToString());
+                Console.WriteLine("Exception: Directory not found - LoadEntries().", d.ToString());
             }
             catch (Exception e)
             {
@@ -192,12 +214,30 @@ namespace VncAddressBook.Model
 
         public void OpenVncViewer(Entry entry)
         {
-            List<string> knownVncViewers = new List<string>() { @"C:\Program Files\TightVNC\tvnviewer.exe" };
+            // Optimize, Adding RealVNC functionality
 
-            string vncViewer = knownVncViewers[0];
+            string tightVncPath = GetTightVncPath();
+            if (tightVncPath != "invalidpath")
+            {
+                List<string> knownVncViewers = new List<string>() { tightVncPath };
 
-            //System.Diagnostics.Process.Start(vncViewer, "-host=" + entry.Host + " -password=" + entry.Password);
-            System.Diagnostics.Process.Start(vncViewer, " -optionsfile = " + vncEntriesPath + entry.Name + ".vnc");
+                string vncViewer = knownVncViewers[0];
+
+                //System.Diagnostics.Process.Start(vncViewer, "-host=" + entry.Host + " -password=" + entry.Password);
+                System.Diagnostics.Process.Start(vncViewer, " -optionsfile = " + vncEntriesPath + entry.Name + ".vnc");
+
+                //RealVNC Viewer version
+                // To see a list of valid parameters, run vncviewer -help.
+                //System.Diagnostics.Process.Start(vncViewer, " -config " + vncEntriesPath + entry.Name + ".vnc");
+            }
+            else
+            {
+                string message = "TightVNC program file(s) not found. Possible issue with TightVNC installation.";
+                string caption = "TightVNC Not Found";
+                MessageBoxButton buttons = MessageBoxButton.OK;
+                // Displays the MessageBox.
+                MessageBoxResult result = MessageBox.Show(message, caption, buttons, MessageBoxImage.Error);
+            }
         }
     }
 
